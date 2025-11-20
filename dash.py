@@ -4,12 +4,12 @@ import json
 import plotly.express as px
 from datetime import datetime
 
-# === CONFIGURATION ===
+# === Juste affichaqge dans le dash ===
 st.set_page_config(layout="wide")
 st.title("Dashboard de prévision du prix des commodités")
 st.markdown("Comparaison des modèles : XGBoost,  LSTM , GRU")
 
-# === FICHIERS À CHARGER ===
+# === FICHIERS À CHARGER  (resultats des models et aussi data réelles ) ===
 models = {
     'LSTM':      ('all_fuels_data.csv',     'lstm/lstm_global_metrics.json'),
     'GRU':       ('all_fuels_data.csv',      'gru/gru_global_metrics.json'),
@@ -28,7 +28,7 @@ for name, (csv_file, json_file) in models.items():
     except FileNotFoundError:
         st.warning(f"Fichiers manquants pour le modèle {name}.")
 
-# === AFFICHAGE DU TABLEAU DE MÉTRIQUES ===
+# === AFFICHAGE DU TABLEAU DE MÉTRIQUES ( RMSE MAE .. ) ===
 if metrics:
     st.subheader("Résultats comparés (MAE, RMSE, R²)")
 
@@ -118,8 +118,8 @@ if dfs:
         title=f"Prédiction vs Réalité — {model_choice}" + (f" ({selected_commodity})" if selected_commodity else "")
     )
 
-    # Couleurs personnalisées
-    fig.data[0].line.color = 'blue'  # Données réelles (blue)
+    # Couleurs de graph ( données réelles et prédit ) 
+    fig.data[0].line.color = 'blue'  # Données réelles (en bleu)
     
     # Ajout des prédictions futures en orange
     if future_df is not None and not future_df.empty:
@@ -135,3 +135,4 @@ if dfs:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.error("Aucun fichier de données n'est disponible pour afficher les graphiques.")
+
