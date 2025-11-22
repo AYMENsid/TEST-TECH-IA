@@ -32,7 +32,7 @@ for commodity in df['commodity'].unique():
              .asfreq('D')
              .interpolate())
 
-    # 1) Features
+    # Features
     data = pd.DataFrame(index=serie.index)
     data['dow']   = serie.index.dayofweek
     data['month'] = serie.index.month
@@ -42,25 +42,25 @@ for commodity in df['commodity'].unique():
     data.dropna(inplace=True)
     serie = serie.loc[data.index]
 
-    # 2) Cible multi-step
+    #  Cible multi-step
     Y = pd.concat([serie.shift(-h) for h in range(1, H+1)], axis=1)
     Y.columns = [f'y+{h}' for h in range(1, H+1)]
     valid = Y.dropna().index
     X = data.loc[valid]
     Y = Y.loc[valid]
 
-    # 3) Train/Test split
+    #  Train/Test split
     split = int(len(X)*(1-TEST_RATIO))
     X_tr, X_te = X.iloc[:split], X.iloc[split:]
     Y_tr, Y_te = Y.iloc[:split], Y.iloc[split:]
 
-    # 4) Entraînement XGBoost multi-output
+    # Entraînement XGBoost multi-output
     base = XGBRegressor(n_estimators=300, learning_rate=0.05,
                         max_depth=4, random_state=42, verbosity=0)
     model = MultiOutputRegressor(base)
     model.fit(X_tr, Y_tr)
 
-    # 5) Prédictions
+    #  Prédictions
     Y_pred_tr = model.predict(X_tr)
     Y_pred_te = model.predict(X_te)
     future_pred = model.predict(X.iloc[[-1]])[0]
@@ -71,7 +71,7 @@ for commodity in df['commodity'].unique():
     all_y_true_tr.extend(Y_tr.iloc[:, 0].values)
     all_y_pred_tr.extend(Y_pred_tr[:, 0])
 
-    # 6) Évaluation pas +1
+    #  Évaluation pas +1
     def metrics(y_true, y_pred):
         return {
             'RMSE': np.sqrt(mean_squared_error(y_true, y_pred)),
@@ -105,12 +105,12 @@ for commodity in df['commodity'].unique():
             'predicted_close': float(val)
         })
 
-    # 7) RMSE et MAE moyens multi-horizon
+    # RMSE et MAE moyens multi-horizon
     rmse_list = [np.sqrt(mean_squared_error(Y_te.iloc[:,h], Y_pred_te[:,h])) for h in range(H)]
     mae_list = [mean_absolute_error(Y_te.iloc[:,h], Y_pred_te[:,h]) for h in range(H)]
     print(f"RMSE moyen 1–{H}j : {np.mean(rmse_list):.3f} | MAE moyen  : {np.mean(mae_list):.3f}")
 
-# 8) Évaluation globale après la boucle
+# Évaluation globale après la boucle
 global_metrics = {
     'Train': {
         'MAE': mean_absolute_error(all_y_true_tr, all_y_pred_tr),
@@ -132,20 +132,21 @@ for phase in ["Train", "Test"]:
 
 # --- Sauvegarde des fichiers ---
 
-# 1. JSON par commodity
+#  JSON par commodity
 with open('xgb_metrics.json', 'w') as f:
     json.dump(results, f, indent=4)
 
-# 2. JSON global avec train/test
+#  JSON global avec train/test
 with open('xgb_global_metrics.json', 'w') as f:
     json.dump(global_metrics, f, indent=4)
 
-# 3. CSV y_true vs y_pred
+#  CSV y_true vs y_pred
 df_y = pd.DataFrame(all_ytrue_ytest)
-df_y.to_csv('xgb_result_normaliser.csv', index=False)
+df_y.to_csv('xgb_result.csv', index=False)
 
-# 4. CSV prédictions futures
+#  CSV prédictions futures
 df_fut = pd.DataFrame(all_future_preds)
 df_fut.to_csv('xgb_future.csv', index=False)
 
 print("Tous les fichiers ont été générés.")
+
