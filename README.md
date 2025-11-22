@@ -40,11 +40,13 @@ Ce projet implémente une solution de bout en bout permettant de :
 
 ------------------------------------------------------------------------
 1. Prétraitement des données - Réalisé dans traitement.ipynb.
+    Dataset open source collecter depuis le site Kaggle 
 
- -Chargement des données
- -Détection des valeurs manquantes
- -Conversion des types
- -Suppression des doublons 
+   - chargement des données
+   - détection des valeurs manquantes
+   - conversion des types
+   - suppression des doublons
+
 ----------------------------------------------------------------------------
 2. Modèles de prédiction
 
