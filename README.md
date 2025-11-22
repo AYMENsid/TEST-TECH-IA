@@ -65,13 +65,7 @@ Le modèle XGBoost utilise des features tabulaires :
 
 - prédiction multi-horizon (365 jours)
 
-Les sorties :
-
-xgb_future.csv
-
-xgb_global_metrics.json
-
-xgb_result.csv
+Les sorties :  xgb_future.csv  ,  xgb_global_metrics.json , xgb_result.csv
 
   ------------------------------------------
  
@@ -93,26 +87,14 @@ chaque fenêtre = 180 jours → prédiction 14 jours
 
  Décomposition STL :
 
-La série close est décomposée en :
-
-tendance
-
-saisonnalité
-
-résidus
+La série close est décomposée en : tendance , saisonnalité , résidus
 
 Le LSTM prédit ensuite les résidus, permettant une reconstruction :
 
 prévision = tendance_futur + saisonnalité_futur + résidus_prédits
 
 
-Les sorties :
-
-lstm_future.csv
-
-lstm_global_metrics.json
-
-lstm_result_normaliser.csv
+Les sorties : lstm_future.csv , lstm_global_metrics.json , lstm_result_normaliser.csv
 
  --------------------------------------------------- 
 
@@ -134,13 +116,7 @@ Le GRU est utilisé pour des prédictions plus rapides que lstm  et efficaces :
 
 Comme le LSTM, mais version GRU, plus rapide.
 
-Sorties :
-
-gru_future.csv
-
-gru_global_metrics.json
-
-gru_result_normaliser.csv
+Sorties : gru_future.csv , gru_global_metrics.json , gru_result_normaliser.csv
 
 -------------------------------------------------------------------------------------------------------------
 3. Évaluation & Comparaison
