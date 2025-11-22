@@ -1,0 +1,16 @@
+pandas
+numpy
+matplotlib
+scikit-learn
+xgboost
+tensorflow
+keras
+statsmodels
+fastapi
+uvicorn[standard]
+streamlit
+plotly
+python-dateutil
+pydantic
+requests
+json5
